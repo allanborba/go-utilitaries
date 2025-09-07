@@ -21,3 +21,11 @@ func TestIinitializeSetOfIntegers(t *testing.T) {
 		t.Errorf("expected 0, got %d", set.Len())
 	}
 }
+
+func TestInitializeSetOfStrings(t *testing.T) {
+	set := collections.NewSet([]string{"1", "2", "3", "4"})
+
+	if set.Len() != 4 {
+		t.Errorf("expected 0, got %d", set.Len())
+	}
+}
