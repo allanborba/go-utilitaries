@@ -12,6 +12,13 @@ func TestIinitializeSetWithCorrectlyLength(t *testing.T) {
 	assertSetLength(t, 2, collections.NewSet([]string{"1", "2"}).Len())
 }
 
+func TestAddElementOnSet(t *testing.T) {
+	set := collections.NewSet([]int{})
+	set.Add(5)
+
+	assertSetLength(t, 1, set.Len())
+}
+
 func assertSetLength(t *testing.T, expected int, result int) {
 	if result != expected {
 		t.Errorf("expected %d, got %d", expected, result)

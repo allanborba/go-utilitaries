@@ -7,12 +7,12 @@ type Set[T comparable] struct {
 func NewSet[T comparable](elements []T) *Set[T] {
 	set := &Set[T]{make(map[T]struct{})}
 	for _, el := range elements {
-		set.add(el)
+		set.Add(el)
 	}
 	return set
 }
 
-func (this *Set[T]) add(el T) {
+func (this *Set[T]) Add(el T) {
 	this.elemements[el] = struct{}{}
 }
 
