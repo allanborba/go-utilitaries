@@ -20,6 +20,16 @@ func TestAddElementOnSet(t *testing.T) {
 	assertSetLength(t, 2, set.Len())
 }
 
+func TestWhenTryToAddRepitedElementDoesNotDuplicatedOnSet(t *testing.T) {
+	set := collections.NewSet([]int{})
+	set.Add(5)
+	set.Add(10)
+	set.Add(10)
+	set.Add(5)
+
+	assertSetLength(t, 2, set.Len())
+}
+
 func assertSetLength(t *testing.T, expected int, result int) {
 	if result != expected {
 		t.Errorf("expected %d, got %d", expected, result)
