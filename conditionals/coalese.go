@@ -1,9 +1,11 @@
 package conditionals
 
-func Coalesce[T any](val ...*T) *T {
-	if val[0] != nil {
-		return val[0]
-	} else {
-		return val[1]
+func Coalesce[T any](values ...*T) *T {
+	for _, val := range values {
+		if val != nil {
+			return val
+		}
 	}
+
+	return nil
 }
