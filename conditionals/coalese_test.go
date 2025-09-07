@@ -13,6 +13,8 @@ type fakeStruct struct {
 
 func TestCoalesce(t *testing.T) {
 	val1 := &fakeStruct{1}
+	val2 := &fakeStruct{2}
 
 	asserts.DeepEqual(t, &fakeStruct{1}, conditionals.Coalesce(val1))
+	asserts.DeepEqual(t, &fakeStruct{2}, conditionals.Coalesce(nil, val2))
 }
