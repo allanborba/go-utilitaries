@@ -13,5 +13,4 @@ func TestTernary(t *testing.T) {
 
 	asserts.Equal(t, "a", conditionals.Ternary(true, "a", "b"))
 	asserts.Equal(t, "b", conditionals.Ternary(false, "a", "b"))
-
 }
