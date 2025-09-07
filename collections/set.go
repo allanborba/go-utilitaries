@@ -5,10 +5,13 @@ type Set[T comparable] struct {
 }
 
 func NewSet[T comparable](elements []T) *Set[T] {
-	set := &Set[T]{}
+	set := &Set[T]{make(map[T]struct{})}
+	for _, element := range elements {
+		set.elemements[element] = struct{}{}
+	}
 	return set
 }
 
 func (this *Set[T]) Len() int {
-	return 0
+	return len(this.elemements)
 }

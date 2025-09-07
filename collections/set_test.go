@@ -13,3 +13,11 @@ func TestIinitializeEmptySet(t *testing.T) {
 		t.Errorf("expected 0, got %d", set.Len())
 	}
 }
+
+func TestIinitializeSetOfIntegers(t *testing.T) {
+	set := collections.NewSet([]int{1, 2, 3})
+
+	if set.Len() != 3 {
+		t.Errorf("expected 0, got %d", set.Len())
+	}
+}
