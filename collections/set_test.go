@@ -12,15 +12,7 @@ func TestIinitializeSetWithCorrectlyLength(t *testing.T) {
 	assertSetLength(t, 2, collections.NewSet([]string{"1", "2"}).Len())
 }
 
-func TestAddElementOnSet(t *testing.T) {
-	set := collections.NewSet([]int{})
-	set.Add(5)
-	set.Add(10)
-
-	assertSetLength(t, 2, set.Len())
-}
-
-func TestWhenTryToAddRepitedElementDoesNotDuplicatedOnSet(t *testing.T) {
+func TestAddElementsOnlyOnceOnSet(t *testing.T) {
 	set := collections.NewSet([]int{})
 	set.Add(5)
 	set.Add(10)
