@@ -15,7 +15,7 @@ func Slices(t *testing.T, expectedSlice []int, resultSlice []int) {
 	}
 }
 
-func Equal(t *testing.T, expected int, result int) {
+func Equal[T comparable](t *testing.T, expected T, result T) {
 	if result != expected {
 		t.Errorf("expected %d, got %d", expected, result)
 	}

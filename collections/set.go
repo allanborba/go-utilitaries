@@ -16,6 +16,11 @@ func (this *Set[T]) Add(el T) {
 	this.elemements[el] = struct{}{}
 }
 
+func (this *Set[T]) Has(el T) bool {
+	_, has := this.elemements[el]
+	return has
+}
+
 func (this *Set[T]) Len() int {
 	return len(this.elemements)
 }

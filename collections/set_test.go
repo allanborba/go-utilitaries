@@ -29,3 +29,9 @@ func TestConvertSetInToSlice(t *testing.T) {
 
 	asserts.Slices(t, expectedSlice, resultSlice)
 }
+
+func TestInformCorrectlyIfHasElementOnSet(t *testing.T) {
+	set := collections.NewSet([]int{1, 2, 3})
+
+	asserts.Equal(t, true, set.Has(1))
+}
