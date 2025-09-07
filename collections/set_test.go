@@ -15,8 +15,9 @@ func TestIinitializeSetWithCorrectlyLength(t *testing.T) {
 func TestAddElementOnSet(t *testing.T) {
 	set := collections.NewSet([]int{})
 	set.Add(5)
+	set.Add(10)
 
-	assertSetLength(t, 1, set.Len())
+	assertSetLength(t, 2, set.Len())
 }
 
 func assertSetLength(t *testing.T, expected int, result int) {
