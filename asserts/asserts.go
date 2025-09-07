@@ -18,6 +18,6 @@ func Slices[T cmp.Ordered](t *testing.T, expectedSlice []T, resultSlice []T) {
 
 func Equal[T comparable](t *testing.T, expected T, result T) {
 	if result != expected {
-		t.Errorf("expected %d, got %d", expected, result)
+		t.Errorf("expected %v, got %v", expected, result)
 	}
 }
