@@ -30,6 +30,13 @@ func TestConvertSetInToSlice(t *testing.T) {
 	asserts.Slices(t, expectedSlice, resultSlice)
 }
 
+func TestConvertSetOfStringsInToSlice(t *testing.T) {
+	resultSlice := collections.NewSet([]string{"a", "b", "c", "d"}).ToSlice()
+	expectedSlice := []string{"a", "b", "c", "d"}
+
+	asserts.Slices(t, expectedSlice, resultSlice)
+}
+
 func TestInformCorrectlyIfHasElementOnSet(t *testing.T) {
 	set := collections.NewSet([]int{1, 2, 3})
 

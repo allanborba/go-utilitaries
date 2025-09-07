@@ -1,17 +1,18 @@
 package asserts
 
 import (
+	"cmp"
 	"reflect"
 	"slices"
 	"testing"
 )
 
-func Slices(t *testing.T, expectedSlice []int, resultSlice []int) {
+func Slices[T cmp.Ordered](t *testing.T, expectedSlice []T, resultSlice []T) {
 	slices.Sort(expectedSlice)
 	slices.Sort(resultSlice)
 
 	if !reflect.DeepEqual(expectedSlice, resultSlice) {
-		t.Errorf("expected %d, got %d", expectedSlice, resultSlice)
+		t.Errorf("expected %v, got %v", expectedSlice, resultSlice)
 	}
 }
 
