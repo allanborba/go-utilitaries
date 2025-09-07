@@ -19,3 +19,10 @@ func (this *Set[T]) Add(el T) {
 func (this *Set[T]) Len() int {
 	return len(this.elemements)
 }
+func (this *Set[T]) ToSlice() []T {
+	sl := []T{}
+	for el := range this.elemements {
+		sl = append(sl, el)
+	}
+	return sl
+}
