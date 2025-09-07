@@ -25,11 +25,14 @@ func TestAddElementsOnlyOnceOnSet(t *testing.T) {
 }
 
 func TestConvertSetInToSlice(t *testing.T) {
-	set := collections.NewSet([]int{1, 2, 3, 10, 15})
-
+	resultSlice := collections.NewSet([]int{1, 2, 3, 10, 15}).ToSlice()
 	expectedSlice := []int{1, 2, 3, 10, 15}
-	resultSlice := set.ToSlice()
 
+	assertSlices(t, expectedSlice, resultSlice)
+}
+
+func assertSlices(t *testing.T, expectedSlice []int, resultSlice []int) {
+	slices.Sort(expectedSlice)
 	slices.Sort(resultSlice)
 
 	if !reflect.DeepEqual(expectedSlice, resultSlice) {
