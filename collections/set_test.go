@@ -1,17 +1,16 @@
 package collections_test
 
 import (
-	"reflect"
-	"slices"
 	"testing"
 
+	"github.com/allanborba/utilitaries/asserts"
 	"github.com/allanborba/utilitaries/collections"
 )
 
 func TestIinitializeSetWithCorrectlyLength(t *testing.T) {
-	assertSetLength(t, 0, collections.NewSet([]int{}).Len())
-	assertSetLength(t, 3, collections.NewSet([]int{1, 2, 3}).Len())
-	assertSetLength(t, 2, collections.NewSet([]string{"1", "2"}).Len())
+	asserts.Equal(t, 0, collections.NewSet([]int{}).Len())
+	asserts.Equal(t, 3, collections.NewSet([]int{1, 2, 3}).Len())
+	asserts.Equal(t, 2, collections.NewSet([]string{"1", "2"}).Len())
 }
 
 func TestAddElementsOnlyOnceOnSet(t *testing.T) {
@@ -21,27 +20,12 @@ func TestAddElementsOnlyOnceOnSet(t *testing.T) {
 	set.Add(10)
 	set.Add(5)
 
-	assertSetLength(t, 2, set.Len())
+	asserts.Equal(t, 2, set.Len())
 }
 
 func TestConvertSetInToSlice(t *testing.T) {
 	resultSlice := collections.NewSet([]int{1, 2, 3, 10, 15}).ToSlice()
 	expectedSlice := []int{1, 2, 3, 10, 15}
 
-	assertSlices(t, expectedSlice, resultSlice)
-}
-
-func assertSlices(t *testing.T, expectedSlice []int, resultSlice []int) {
-	slices.Sort(expectedSlice)
-	slices.Sort(resultSlice)
-
-	if !reflect.DeepEqual(expectedSlice, resultSlice) {
-		t.Errorf("expected %d, got %d", expectedSlice, resultSlice)
-	}
-}
-
-func assertSetLength(t *testing.T, expected int, result int) {
-	if result != expected {
-		t.Errorf("expected %d, got %d", expected, result)
-	}
+	asserts.Slices(t, expectedSlice, resultSlice)
 }
