@@ -34,4 +34,8 @@ func TestInformCorrectlyIfHasElementOnSet(t *testing.T) {
 	set := collections.NewSet([]int{1, 2, 3})
 
 	asserts.Equal(t, true, set.Has(1))
+	asserts.Equal(t, true, set.Has(2))
+	asserts.Equal(t, true, set.Has(3))
+	asserts.Equal(t, false, set.Has(-1))
+	asserts.Equal(t, false, set.Has(4))
 }
