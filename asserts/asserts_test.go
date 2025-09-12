@@ -48,9 +48,10 @@ func TestEqual_WhenValueAreNotEqual_ThenShowNotEqualErrorMsg(t *testing.T) {
 func TestGetFieldNamesOfStruct(t *testing.T) {
 	type TestStruct struct {
 		A int
+		B string
 	}
 
-	expected := []string{"A"}
+	expected := []string{"A", "B"}
 	result := asserts.GetFieldNames(TestStruct{})
 
 	asserts.Slices(t, expected, result)
