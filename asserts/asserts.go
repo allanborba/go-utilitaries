@@ -33,16 +33,3 @@ func Equal[T comparable](t Tester, expected T, result T) {
 		t.Errorf(ERROR_MSG, expected, result)
 	}
 }
-
-func GetFieldNames[T any](obj T) []string {
-	fields := []string{}
-	value := reflect.ValueOf(obj)
-	typeOf := value.Type()
-
-	for i := range typeOf.NumField() {
-		filedName := typeOf.Field(i).Name
-		fields = append(fields, filedName)
-	}
-
-	return fields
-}
