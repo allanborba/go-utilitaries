@@ -22,7 +22,7 @@ func Slices[T cmp.Ordered](t *testing.T, expectedSlice []T, resultSlice []T) {
 	}
 }
 
-func DeepEqual[T any](t *testing.T, expected, result T) {
+func DeepEqual[T any](t Tester, expected, result T) {
 	if !reflect.DeepEqual(expected, result) {
 		t.Errorf(ERROR_MSG, expected, result)
 	}
@@ -32,4 +32,11 @@ func Equal[T comparable](t Tester, expected T, result T) {
 	if result != expected {
 		t.Errorf(ERROR_MSG, expected, result)
 	}
+}
+
+func GetFieldNames[T any](obj T) []string {
+	value := reflect.ValueOf(obj)
+	typeOf := value.Type()
+	filedName := typeOf.Field(0).Name
+	return []string{filedName}
 }

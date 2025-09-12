@@ -35,3 +35,23 @@ func TestEqual_WhenValueAreNotEqual_ThenShowNotEqualErrorMsg(t *testing.T) {
 		t.Errorf("expected error message, but got nothing")
 	}
 }
+
+// func TestDeepEqual_WhenOneAttributeIsNotEqual_ThenShowTheAttributeNotEqualOnMsg(t *testing.T) {
+// 	mokingT := NewFakeT()
+// 	asserts.DeepEqual(mokingT, struct{ A int }{1}, struct{ A int }{2})
+
+// 	if mokingT.ErrorMsg != "expected {A:1}, got {A:2}" {
+// 		t.Errorf("wrong error msg")
+// 	}
+// }
+
+func TestGetFieldNamesOfStruct(t *testing.T) {
+	type TestStruct struct {
+		A int
+	}
+
+	expected := []string{"A"}
+	result := asserts.GetFieldNames(TestStruct{})
+
+	asserts.Slices(t, expected, result)
+}
