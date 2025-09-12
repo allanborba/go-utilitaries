@@ -31,7 +31,7 @@ func TestEqual_WhenValueAreNotEqual_ThenShowNotEqualErrorMsg(t *testing.T) {
 	mokingT := NewFakeT()
 	asserts.Equal(mokingT, 1, 0)
 
-	if mokingT.ErrorMsg != "expected %v, got %v" {
+	if mokingT.ErrorMsg != asserts.ERROR_MSG {
 		t.Errorf("expected error message, but got nothing")
 	}
 }
