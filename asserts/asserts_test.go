@@ -49,9 +49,10 @@ func TestGetFieldNamesOfStruct(t *testing.T) {
 	type TestStruct struct {
 		A int
 		B string
+		c bool
 	}
 
-	expected := []string{"A", "B"}
+	expected := []string{"A", "B", "c"}
 	result := asserts.GetFieldNames(TestStruct{})
 
 	asserts.Slices(t, expected, result)
