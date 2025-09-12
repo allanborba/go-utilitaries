@@ -8,32 +8,22 @@ import (
 )
 
 func TestGetFieldNamesOfStruct(t *testing.T) {
-	type TestStruct struct {
-		A int
-		B string
-		c bool
-	}
-
-	expected := []string{"A", "B", "c"}
+	expected := []string{"A", "b"}
 	result := asserts.GetFieldNames(TestStruct{})
 
 	asserts.Slices(t, expected, result)
 }
 
-func TestConvertStructToMap(t *testing.T) {
-	testStruct := struct {
-		A int
-		b string
-	}{
-		A: 0,
-		b: "string",
-	}
+func TestGetFieldNamesOfPointerStruct(t *testing.T) {
+	expected := []string{"A", "b"}
+	result := asserts.GetFieldNames(&TestStruct{})
 
-	expected := map[string]interface{}{
-		"A": 0,
-		"b": "string",
-	}
-	result := asserts.StructToMap(testStruct)
+	asserts.Slices(t, expected, result)
+}
+
+func TestConvertStructToMap(t *testing.T) {
+	expected := map[string]interface{}{"A": 0, "b": "string"}
+	result := asserts.StructToMap(TestStruct{0, "string"})
 
 	if !reflect.DeepEqual(expected, result) {
 		t.Errorf("expected %v, got %v", expected, result)
@@ -41,19 +31,8 @@ func TestConvertStructToMap(t *testing.T) {
 }
 
 func TestCovertStructToMap_WhenStructIsPointer(t *testing.T) {
-	testStruct := struct {
-		A int
-		b string
-	}{
-		A: 0,
-		b: "string",
-	}
-
-	expected := map[string]interface{}{
-		"A": 0,
-		"b": "string",
-	}
-	result := asserts.StructToMap(&testStruct)
+	expected := map[string]interface{}{"A": 0, "b": "string"}
+	result := asserts.StructToMap(&TestStruct{0, "string"})
 
 	if !reflect.DeepEqual(expected, result) {
 		t.Errorf("expected %v, got %v", expected, result)

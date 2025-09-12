@@ -7,7 +7,7 @@ import (
 
 func GetFieldNames[T any](obj T) []string {
 	fields := []string{}
-	value := reflect.ValueOf(obj)
+	value := reflectValue(obj)
 	typeOf := value.Type()
 
 	for i := range typeOf.NumField() {
@@ -20,15 +20,10 @@ func GetFieldNames[T any](obj T) []string {
 
 func StructToMap(in interface{}) map[string]interface{} {
 	structMapped := make(map[string]interface{})
-
-	value := reflect.ValueOf(in)
-	if value.Kind() == reflect.Ptr {
-		value = value.Elem()
-	}
+	value := reflectValue(in)
 
 	copy := reflect.New(value.Type()).Elem()
 	copy.Set(value)
-
 	elType := copy.Type()
 
 	for i := 0; i < copy.NumField(); i++ {
@@ -36,6 +31,15 @@ func StructToMap(in interface{}) map[string]interface{} {
 	}
 
 	return structMapped
+}
+
+func reflectValue(in interface{}) reflect.Value {
+	value := reflect.ValueOf(in)
+
+	for value.Kind() == reflect.Ptr || value.Kind() == reflect.Interface {
+		value = value.Elem()
+	}
+	return value
 }
 
 func mapValue(copy reflect.Value, i int, elType reflect.Type, structMapped map[string]interface{}) {
