@@ -18,7 +18,7 @@ func (f *FakeT) Errorf(format string, args ...interface{}) {
 	f.ErrorMsg = format
 }
 
-func TestAssertEqual_WhenValueAreEqual_ThenNotShowError(t *testing.T) {
+func TestEqual_WhenValueAreEqual_ThenNotShowError(t *testing.T) {
 	mokingT := NewFakeT()
 	asserts.Equal(mokingT, 0, 0)
 
@@ -27,7 +27,7 @@ func TestAssertEqual_WhenValueAreEqual_ThenNotShowError(t *testing.T) {
 	}
 }
 
-func TestAssertEqual_WhenValueAreNotEqual_ThenShowNotEqualErrorMsg(t *testing.T) {
+func TestEqual_WhenValueAreNotEqual_ThenShowNotEqualErrorMsg(t *testing.T) {
 	mokingT := NewFakeT()
 	asserts.Equal(mokingT, 1, 0)
 
