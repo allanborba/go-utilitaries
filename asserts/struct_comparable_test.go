@@ -23,7 +23,7 @@ func TestGetFieldNamesOfPointerStruct(t *testing.T) {
 
 func TestConvertStructToMap(t *testing.T) {
 	expected := map[string]interface{}{"A": 0, "b": "string"}
-	result := asserts.StructToMap(TestStruct{0, "string"})
+	result := asserts.StructToMap(TestStruct{A: 0, b: "string"})
 
 	if !reflect.DeepEqual(expected, result) {
 		t.Errorf("expected %v, got %v", expected, result)
@@ -32,7 +32,7 @@ func TestConvertStructToMap(t *testing.T) {
 
 func TestCovertStructToMap_WhenStructIsPointer(t *testing.T) {
 	expected := map[string]interface{}{"A": 0, "b": "string"}
-	result := asserts.StructToMap(&TestStruct{0, "string"})
+	result := asserts.StructToMap(&TestStruct{A: 0, b: "string"})
 
 	if !reflect.DeepEqual(expected, result) {
 		t.Errorf("expected %v, got %v", expected, result)

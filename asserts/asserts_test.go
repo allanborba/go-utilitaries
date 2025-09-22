@@ -56,8 +56,8 @@ func TestDeepEqual_WhenAreBotEqualPrimitivesType_ThenNotShowError(t *testing.T) 
 
 func TestDeepEqual_WhenAreEqualStructsWithSameAttrs_ThenNotShowError(t *testing.T) {
 	mokingT := NewFakeT()
-	struct1 := TestStruct{1, "string"}
-	struct2 := TestStruct{1, "string"}
+	struct1 := TestStruct{A: 1, b: "string"}
+	struct2 := TestStruct{A: 1, b: "string"}
 
 	asserts.DeepEqual(mokingT, struct1, struct2)
 
@@ -66,27 +66,36 @@ func TestDeepEqual_WhenAreEqualStructsWithSameAttrs_ThenNotShowError(t *testing.
 
 func TestDeepEqual_WhenAreEqualStructsWithOneDiffAttr_ThenShowBothAttrsValues(t *testing.T) {
 	mokingT := NewFakeT()
-	struct1 := TestStruct{3, "1"}
-	struct2 := TestStruct{3, "2"}
+	struct1 := TestStruct{A: 3, b: "1"}
+	struct2 := TestStruct{A: 3, b: "2"}
 
 	asserts.DeepEqual(mokingT, struct1, struct2)
 
-	assertErrorMsg(t, mokingT, "expected {b: 1}, got {b: 2}")
+	assertErrorMsg(t, mokingT, "expected { b: 1 }, got { b: 2 }")
 }
 
 func TestDeepEqual_WhenAreEqualStructsPointersWithOneDiffAttr_ThenShowBothAttrsValues(t *testing.T) {
 	mokingT := NewFakeT()
-	struct1 := &TestStruct{3, "1"}
-	struct2 := &TestStruct{3, "2"}
+	struct1 := &TestStruct{A: 3, b: "1"}
+	struct2 := &TestStruct{A: 3, b: "2"}
 
 	asserts.DeepEqual(mokingT, struct1, struct2)
 
-	assertErrorMsg(t, mokingT, "expected {b: 1}, got {b: 2}")
+	assertErrorMsg(t, mokingT, "expected { b: 1 }, got { b: 2 }")
+}
+
+func TestDeepEqual_WhenAreEqualStructsWithTwoDiffAttr_ThenShowBothAttrsValues(t *testing.T) {
+	mokingT := NewFakeT()
+	struct1 := TestStruct{A: 2, b: "1"}
+	struct2 := TestStruct{A: 3, b: "2"}
+
+	asserts.DeepEqual(mokingT, struct1, struct2)
+
+	assertErrorMsg(t, mokingT, "expected { A: 2 b: 1 }, got { A: 3 b: 2 }")
 }
 
 /*
 testes faltantes
-- [] mais de um campo errado
 - [] campo com atributo sendo uma struct
 - [] campo com atributo sendo um ponteiro
 - [] um elemento é nulo e o outro não
