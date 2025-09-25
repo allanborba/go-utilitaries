@@ -7,6 +7,20 @@ import (
 	"github.com/allanborba/utilitaries/asserts"
 )
 
+/*
+- []deepEqual
+	- [] campo com atributo sendo uma struct
+	- [] campo com atributo sendo um ponteiro
+	- [] um elemento é nulo e o outro não
+
+- [] Slice
+	- [] quantidade diferente
+	- [] primitivo mesma ordem
+	- [] primitivo diferente ordem
+	- [] struct em ordem diferente
+
+*/
+
 type FakeT struct {
 	ErrorMsg string
 }
@@ -22,6 +36,7 @@ func (f *FakeT) Errorf(format string, args ...interface{}) {
 type TestStruct struct {
 	A int
 	b string
+	c *TestStruct
 }
 
 func TestEqual_WhenValueAreEqual_ThenNotShowError(t *testing.T) {
@@ -94,12 +109,15 @@ func TestDeepEqual_WhenAreEqualStructsWithTwoDiffAttr_ThenShowBothAttrsValues(t 
 	assertErrorMsg(t, mokingT, "expected { A: 2 b: 1 }, got { A: 3 b: 2 }")
 }
 
-/*
-testes faltantes
-- [] campo com atributo sendo uma struct
-- [] campo com atributo sendo um ponteiro
-- [] um elemento é nulo e o outro não
-*/
+func TestDeepEqual_WhenStructFieldHasInteralDiff_ThenShowOnlyDiffAttributes(t *testing.T) {
+	mokingT := NewFakeT()
+	struct1 := TestStruct{A: 2, b: "1", c: &TestStruct{A: 3, b: "2"}}
+	struct2 := TestStruct{A: 2, b: "1", c: &TestStruct{A: 3, b: "3"}}
+
+	asserts.DeepEqual(mokingT, struct1, struct2)
+
+	assertErrorMsg(t, mokingT, "expected { C: { b: 2 } }, got { C: { b: 3 }  }")
+}
 
 func assertNoError(t *testing.T, mokingT *FakeT) {
 	if mokingT.ErrorMsg != "" {

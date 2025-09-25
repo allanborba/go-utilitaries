@@ -43,22 +43,24 @@ func compareStructs[T any](expected T, result T, t Tester) {
 	resultMap := StructToMap(result)
 
 	errorsKeys := []string{}
-	errorsExpectedValues := []interface{}{}
-	errorsResultValues := []interface{}{}
+	expectedMsg := ""
+	resultMsg := ""
 
 	for _, field := range fields {
 		if expectedMap[field] == resultMap[field] {
 			continue
 		}
 
+		expectedMsg += fmt.Sprintf("%v: %v ", field, expectedMap[field])
+		resultMsg += fmt.Sprintf("%v: %v ", field, resultMap[field])
 		errorsKeys = append(errorsKeys, field)
-		errorsExpectedValues = append(errorsExpectedValues, expectedMap[field])
-		errorsResultValues = append(errorsResultValues, resultMap[field])
 	}
 
 	if len(errorsKeys) > 0 {
-		msg := buildErrorMsg(errorsKeys, errorsExpectedValues, errorsResultValues)
-		t.Errorf(msg)
+		expectedMsg = fmt.Sprint("expected { ", expectedMsg, "}")
+		resultMsg = fmt.Sprint("got { ", resultMsg, "}")
+
+		t.Errorf(fmt.Sprintf("%v, %v", expectedMsg, resultMsg))
 	}
 }
 
@@ -69,23 +71,4 @@ func isStruct[T any](expected T) bool {
 	}
 
 	return value.Kind() == reflect.Struct
-}
-
-func buildErrorMsg(errorsKeys []string, errorsExpectedValues []interface{}, errorsResultValues []interface{}) string {
-	expectedMsg := "expected { "
-	resultMsg := "got { "
-
-	for i := range errorsKeys {
-		key := errorsKeys[i]
-		expectedValue := errorsExpectedValues[i]
-		resultValue := errorsResultValues[i]
-
-		expectedMsg += fmt.Sprintf("%v: %v ", key, expectedValue)
-		resultMsg += fmt.Sprintf("%v: %v ", key, resultValue)
-	}
-
-	expectedMsg += "}"
-	resultMsg += "}"
-	msg := fmt.Sprintf("%v, %v", expectedMsg, resultMsg)
-	return msg
 }
