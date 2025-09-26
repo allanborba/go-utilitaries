@@ -1,0 +1,18 @@
+- [] Slices
+  - [] Contains
+  - [] Remove 
+  - [] IndexOf
+- [] Json
+  - [] ToJson
+  - [] ToJsonString
+  - [] FromJson?
+- [] dbAccessor
+  - [] Query
+  - [] QueryRow
+  - [] Exec
+  - [] Begin
+  - [] Commit
+  - [] Rollback
+- [] ENV?
+- [] CustomErrors
+  - 
