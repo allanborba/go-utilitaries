@@ -65,11 +65,15 @@ func TestSlices_WhenAreEqualStructsWithDiffSort_ThenShowNoError(t *testing.T) {
 	mokingT := NewFakeT()
 	expected := []TestStruct{
 		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 3, b: "a"},
+		{A: 4, b: "a"},
 		{A: 1, b: "a"},
 	}
 	result := []TestStruct{
 		{A: 1, b: "a"},
 		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 3, b: "a"},
+		{A: 4, b: "a"},
 	}
 
 	asserts.Slices(mokingT, expected, result)
