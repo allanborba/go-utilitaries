@@ -3,7 +3,7 @@ package asserts_test
 import (
 	"testing"
 
-	"github.com/allanborba/utilitaries/asserts"
+	"github.com/allanborba/go-utilitaries/asserts"
 )
 
 func TestEqual_WhenValueAreEqual_ThenNotShowError(t *testing.T) {

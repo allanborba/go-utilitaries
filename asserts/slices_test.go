@@ -3,7 +3,7 @@ package asserts_test
 import (
 	"testing"
 
-	"github.com/allanborba/utilitaries/asserts"
+	"github.com/allanborba/go-utilitaries/asserts"
 )
 
 func TestSlices_WhenHasDiffSize_ThenShowDiffSizeMsg(t *testing.T) {

@@ -3,8 +3,8 @@ package collections_test
 import (
 	"testing"
 
-	"github.com/allanborba/utilitaries/asserts"
-	"github.com/allanborba/utilitaries/collections"
+	"github.com/allanborba/go-utilitaries/asserts"
+	"github.com/allanborba/go-utilitaries/collections"
 )
 
 type TestStruct struct {

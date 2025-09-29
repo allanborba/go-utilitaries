@@ -3,8 +3,8 @@ package conditionals_test
 import (
 	"testing"
 
-	"github.com/allanborba/utilitaries/asserts"
-	"github.com/allanborba/utilitaries/conditionals"
+	"github.com/allanborba/go-utilitaries/asserts"
+	"github.com/allanborba/go-utilitaries/conditionals"
 )
 
 func TestTernary(t *testing.T) {
