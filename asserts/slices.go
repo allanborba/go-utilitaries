@@ -1,11 +1,5 @@
 package asserts
 
-import (
-	"reflect"
-
-	"github.com/allanborba/utilitaries/collections"
-)
-
 func Slices[T comparable](t Tester, expectedSlice []T, resultSlice []T) {
 	if len(expectedSlice) != len(resultSlice) {
 		t.Errorf("expected %v elements, got %v elements", len(expectedSlice), len(resultSlice))
@@ -13,52 +7,42 @@ func Slices[T comparable](t Tester, expectedSlice []T, resultSlice []T) {
 	}
 
 	resultElementsStringfyedSet := buildStringfyedSet(resultSlice)
+	expectElementsStringfyedSet := buildStringfyedSet(expectedSlice)
 
 	for _, expected := range expectedSlice {
-		if IsStruct(expected) {
-			stringfyedExpected := StringifyedStruct(expected)
+		expectedCount, resultCount := getElementsCount(expected, expectElementsStringfyedSet, resultElementsStringfyedSet)
 
-			if !resultElementsStringfyedSet.Has(stringfyedExpected) {
-				mapped := StringifyedStruct(expected)
-				t.Errorf("element %v not found on results", mapped)
-			}
-		} else {
-			if !resultElementsStringfyedSet.Has(expected) {
-				t.Errorf("element %v not found on results", expected)
-			}
+		if resultCount != expectedCount {
+			t.Errorf("expected element %v found %d times, got %d time", StringifyedStruct(expected), expectedCount, resultCount)
 		}
 	}
 }
 
-func buildStringfyedSet[T any](resultSlice []T) *collections.Set[interface{}] {
-	resultElementsStringfyedSet := collections.NewSet([]interface{}{})
+func getElementsCount[T comparable](expected T, expectElementsStringfyedSet, resultElementsStringfyedSet map[interface{}]int) (int, int) {
+	var expectedCount int
+	var resultCount int
+
+	if IsStruct(expected) {
+		expectedCount = expectElementsStringfyedSet[StringifyedStruct(expected)]
+		resultCount = resultElementsStringfyedSet[StringifyedStruct(expected)]
+	} else {
+		expectedCount = expectElementsStringfyedSet[expected]
+		resultCount = resultElementsStringfyedSet[expected]
+	}
+
+	return expectedCount, resultCount
+}
+
+func buildStringfyedSet[T any](resultSlice []T) map[interface{}]int {
+	resultElementsStringfyedSet := make(map[interface{}]int)
+
 	for _, result := range resultSlice {
 		if IsStruct(result) {
-			resultElementsStringfyedSet.Add(StringifyedStruct(result))
+			resultElementsStringfyedSet[StringifyedStruct(result)]++
 		} else {
-			resultElementsStringfyedSet.Add(result)
+			resultElementsStringfyedSet[result]++
 		}
 	}
+
 	return resultElementsStringfyedSet
-}
-
-func _slicesSlowest[T comparable](t Tester, expectedSlice []T, resultSlice []T) {
-	if len(expectedSlice) != len(resultSlice) {
-		t.Errorf("expected %v elements, got %v elements", len(expectedSlice), len(resultSlice))
-		return
-	}
-
-	for _, expected := range expectedSlice {
-		found := false
-		for _, result := range resultSlice {
-			if reflect.DeepEqual(expected, result) {
-				found = true
-				break
-			}
-		}
-
-		if !found {
-			t.Errorf("element %v not found on results", StringifyedStruct(expected))
-		}
-	}
 }

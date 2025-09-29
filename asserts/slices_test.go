@@ -34,7 +34,7 @@ func TestSlices_WhenHasDiffElement_ThenShowDiffElementMsg(t *testing.T) {
 
 	asserts.Slices(mokingT, expected, result)
 
-	assertErrorMsg(t, mokingT, "element 1 not found on results")
+	assertErrorMsg(t, mokingT, "expected element 1 found 1 times, got 0 time")
 }
 
 func TestSlices_WhenSliceOfStructsHasDiffElement_ThenShowDiffElementMsg(t *testing.T) {
@@ -58,7 +58,7 @@ func TestSlices_WhenSliceOfStructsHasDiffElement_ThenShowDiffElementMsg(t *testi
 
 	asserts.Slices(mokingT, expected, result)
 
-	assertErrorMsg(t, mokingT, "element { A: 4 b: b } not found on results")
+	assertErrorMsg(t, mokingT, "expected element { A: 4 b: b } found 1 times, got 0 time")
 }
 
 func TestSlices_WhenAreEqualStructsWithDiffSort_ThenShowNoError(t *testing.T) {
@@ -79,4 +79,36 @@ func TestSlices_WhenAreEqualStructsWithDiffSort_ThenShowNoError(t *testing.T) {
 	asserts.Slices(mokingT, expected, result)
 
 	assertNoError(t, mokingT)
+}
+
+func TestSlices_WhenSliceHasMoreThaOneTimeSameElement(t *testing.T) {
+	mokingT := NewFakeT()
+	expected := []int{1, 2, 2, 3}
+	result := []int{1, 2, 3, 3}
+
+	asserts.Slices(mokingT, expected, result)
+
+	assertErrorMsg(t, mokingT, "expected element 3 found 1 times, got 2 time")
+}
+
+func TestSlices_WhenSliceHasMoreThaOneTimeSameElementOfStruct_ThenShowNoError(t *testing.T) {
+	mokingT := NewFakeT()
+	expected := []TestStruct{
+		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 3, b: "a"},
+		{A: 4, b: "a"},
+		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 1, b: "a"},
+	}
+	result := []TestStruct{
+		{A: 1, b: "a"},
+		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 3, b: "a"},
+		{A: 4, b: "a"},
+		{A: 4, b: "a"},
+	}
+
+	asserts.Slices(mokingT, expected, result)
+
+	assertErrorMsg(t, mokingT, "expected element { A: 2 b: c c: { A: 3 b: 2 } } found 2 times, got 1 time")
 }
