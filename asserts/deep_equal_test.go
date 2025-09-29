@@ -11,7 +11,6 @@ func TestDeepEqual_WhenAreEqualPrimitivesType_ThenNotShowError(t *testing.T) {
 	asserts.DeepEqual(mokingT, 1, 1)
 
 	assertNoError(t, mokingT)
-
 }
 
 func TestDeepEqual_WhenAreBotEqualPrimitivesType_ThenNotShowError(t *testing.T) {
