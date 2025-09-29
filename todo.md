@@ -1,3 +1,7 @@
+- [] CustomErrors
+  - [] test error
+  - [] http errors
+  - [] comparação de erro
 - [] Json
   - [] ToJson
   - [] ToJsonString
@@ -10,5 +14,3 @@
   - [] Commit
   - [] Rollback
 - [] ENV?
-- [] CustomErrors
-  - 
