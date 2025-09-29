@@ -1,7 +1,3 @@
-- [] Slices
-  - [] Contains
-  - [] Remove 
-  - [] IndexOf
 - [] Json
   - [] ToJson
   - [] ToJsonString
