@@ -14,3 +14,7 @@
   - [] Commit
   - [] Rollback
 - [] ENV?
+
+
+
+GOPRIVATE=github.com/allanborba/* go get github.com/allanborba/go-utilitaries@main
