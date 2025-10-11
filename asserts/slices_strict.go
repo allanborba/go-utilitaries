@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-func SliceStrict[T comparable](t Tester, expected, actual []T) {
-	slices := printableSlices(expected, actual)
+func SliceStrict[T comparable](t Tester, expected, result []T) {
+	slices := printableSlices(expected, result)
 
-	if len(expected) != len(actual) {
-		t.Errorf("%s expected size of %v, received size of %v", slices, len(expected), len(actual))
+	if len(expected) != len(result) {
+		t.Errorf("%s expected size of %v, received size of %v", slices, len(expected), len(result))
 	} else {
-		wrongElementsIndex := getWrongElements(expected, actual)
+		wrongElementsIndex := getWrongElements(expected, result)
 
 		if wrongElementsIndex != "" {
 			t.Errorf("%s diff at index %v", slices, wrongElementsIndex)
@@ -32,14 +32,9 @@ func getWrongElements[T comparable](expected []T, actual []T) string {
 	return strings.Join(wrongElementsIndex, ", ")
 }
 
-func printableSlices[T comparable](expected []T, actual []T) string {
-	expectedString := fmt.Sprint(expected)
-	actualString := fmt.Sprint(actual)
-
-	if IsStruct(expected[0]) {
-		expectedString = StringifySliceOfStructs(expected)
-		actualString = StringifySliceOfStructs(actual)
-	}
+func printableSlices[T comparable](expected []T, result []T) string {
+	expectedString := StringifySliceOfStructs(expected)
+	actualString := StringifySliceOfStructs(result)
 
 	return fmt.Sprintf("\n expected %v\n got %v\n", expectedString, actualString)
 }
