@@ -33,6 +33,13 @@ func getWrongElements[T comparable](expected []T, actual []T) string {
 }
 
 func printableSlices[T comparable](expected []T, actual []T) string {
-	slices := fmt.Sprintf("\n expected %v\n got %v\n", expected, actual)
-	return slices
+	expectedString := fmt.Sprint(expected)
+	actualString := fmt.Sprint(actual)
+
+	if IsStruct(expected[0]) {
+		expectedString = StringifySliceOfStructs(expected)
+		actualString = StringifySliceOfStructs(actual)
+	}
+
+	return fmt.Sprintf("\n expected %v\n got %v\n", expectedString, actualString)
 }

@@ -33,3 +33,18 @@ func TestSliceStrict_WhenHasExpectedHasMoreElements_ShowSlicesAndSizeOfEachOne(t
 
 	assertErrorMsg(t, mokingT, "\n expected [1 2 3 4]\n got [2 2 4]\n expected size of 4, received size of 3")
 }
+
+func TestSlicesStrict_WhenElementsAreStructsAndHasOneFieldDiff_IndicateTheIndexOfDiffElement(t *testing.T) {
+	mokingT := NewFakeT()
+	expectedStructs := []TestStruct{
+		{A: 1, b: "2"},
+		{A: 5, b: "6"},
+	}
+	resultStructs := []TestStruct{
+		{A: 1, b: "2"},
+		{A: 5, b: "7"},
+	}
+	asserts.SliceStrict(mokingT, expectedStructs, resultStructs)
+
+	assertErrorMsg(t, mokingT, "\n expected [{ A: 1 b: 2 } { A: 5 b: 6 }]\n got [{ A: 1 b: 2 } { A: 5 b: 7 }]\n diff at index 1")
+}

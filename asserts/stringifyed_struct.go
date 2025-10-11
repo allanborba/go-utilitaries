@@ -3,6 +3,7 @@ package asserts
 import (
 	"fmt"
 	"slices"
+	"strings"
 )
 
 func StringifyedStruct[T any](expected T) string {
@@ -29,4 +30,13 @@ func StringifyedStruct[T any](expected T) string {
 	}
 
 	return fmt.Sprint("{ ", str, "}")
+}
+
+func StringifySliceOfStructs[T any](slice []T) string {
+	sliceofStrings := []string{}
+	for _, item := range slice {
+		sliceofStrings = append(sliceofStrings, StringifyedStruct(item))
+	}
+
+	return fmt.Sprintf("[%s]", strings.Join(sliceofStrings, " "))
 }
