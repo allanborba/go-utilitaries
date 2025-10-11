@@ -20,9 +20,16 @@ func TestSliceStrict_WhenTwoElementIsDiff_IndicateTheIndexOfDiffElement(t *testi
 	assertErrorMsg(t, mokingT, "\n expected [1 2 3 4]\n got [2 2 4 4]\n diff at index 0, 2")
 }
 
-func TestSliceStrict_WhenHasDiffSize_ShowError(t *testing.T) {
+func TestSliceStrict_WhenHasResultHasMoreElements_ShowSlicesAndSizeOfEachOne(t *testing.T) {
 	mokingT := NewFakeT()
 	asserts.SliceStrict(mokingT, []int{1, 2}, []int{2, 2, 4})
 
 	assertErrorMsg(t, mokingT, "\n expected [1 2]\n got [2 2 4]\n expected size of 2, received size of 3")
+}
+
+func TestSliceStrict_WhenHasExpectedHasMoreElements_ShowSlicesAndSizeOfEachOne(t *testing.T) {
+	mokingT := NewFakeT()
+	asserts.SliceStrict(mokingT, []int{1, 2, 3, 4}, []int{2, 2, 4})
+
+	assertErrorMsg(t, mokingT, "\n expected [1 2 3 4]\n got [2 2 4]\n expected size of 4, received size of 3")
 }

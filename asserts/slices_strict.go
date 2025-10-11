@@ -6,14 +6,21 @@ import (
 )
 
 func SliceStrict[T comparable](t Tester, expected, actual []T) {
-	wrongElementsIndex := []string{}
-
-	slices := fmt.Sprintf("\n expected %v\n got %v\n", expected, actual)
+	slices := printableSlices(expected, actual)
 
 	if len(expected) != len(actual) {
 		t.Errorf("%s expected size of %v, received size of %v", slices, len(expected), len(actual))
-		return
+	} else {
+		wrongElementsIndex := getWrongElements(expected, actual)
+
+		if wrongElementsIndex != "" {
+			t.Errorf("%s diff at index %v", slices, wrongElementsIndex)
+		}
 	}
+}
+
+func getWrongElements[T comparable](expected []T, actual []T) string {
+	wrongElementsIndex := []string{}
 
 	for i := range expected {
 		if expected[i] != actual[i] {
@@ -22,9 +29,10 @@ func SliceStrict[T comparable](t Tester, expected, actual []T) {
 		}
 	}
 
-	wrongElementsIndexString := strings.Join(wrongElementsIndex, ", ")
+	return strings.Join(wrongElementsIndex, ", ")
+}
 
-	if len(wrongElementsIndex) > 0 {
-		t.Errorf("%s diff at index %v", slices, wrongElementsIndexString)
-	}
+func printableSlices[T comparable](expected []T, actual []T) string {
+	slices := fmt.Sprintf("\n expected %v\n got %v\n", expected, actual)
+	return slices
 }
