@@ -91,7 +91,7 @@ func TestSlices_WhenSliceHasMoreThaOneTimeSameElement(t *testing.T) {
 	assertErrorMsg(t, mokingT, "expected element 3 found 1 times, got 2 time")
 }
 
-func TestSlices_WhenSliceHasMoreThaOneTimeSameElementOfStruct_ThenShowNoError(t *testing.T) {
+func TestSlices_WhenSliceHasMoreThaOneTimeSameElementOfStruct(t *testing.T) {
 	mokingT := NewFakeT()
 	expected := []TestStruct{
 		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
