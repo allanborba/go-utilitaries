@@ -7,15 +7,22 @@ import (
 )
 
 func TestEqual_WhenValueAreEqual_ThenNotShowError(t *testing.T) {
-	mokingT := NewFakeT()
-	asserts.Equal(mokingT, 0, 0)
-
-	assertNoError(t, mokingT)
+	assertEqualNoError(t, 0, 0)
+	assertEqualNoError(t, "a", "a")
+	assertEqual(t, 0, 1, "expected 0, got 1")
+	assertEqual(t, "0", "1", "expected 0, got 1")
+	assertEqualNoError(t, true, true)
+	assertEqual(t, true, false, "expected true, got false")
 }
 
-func TestEqual_WhenValueAreNotEqual_ThenShowNotEqualErrorMsg(t *testing.T) {
-	mokingT := NewFakeT()
-	asserts.Equal(mokingT, 1, 0)
+func assertEqualNoError[T any](t *testing.T, expected, actual T) {
+	mockT := NewFakeT()
+	asserts.Equal(mockT, expected, actual)
+	assertNoError(t, mockT)
+}
 
-	assertErrorMsg(t, mokingT, "expected 1, got 0")
+func assertEqual[T any](t *testing.T, expected, actual T, msg string) {
+	mockT := NewFakeT()
+	asserts.Equal(mockT, expected, actual)
+	assertErrorMsg(t, mockT, msg)
 }

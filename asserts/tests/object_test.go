@@ -47,34 +47,23 @@ type testStruct struct {
 func assertObjectNoError[T any](t *testing.T, expected, actual T) {
 	mockT := NewFakeT()
 	asserts.Object(mockT, expected, actual)
-
-	if mockT.ErrorMsg != "" {
-		t.Errorf("expected no error msg, got: %v", mockT.ErrorMsg)
-	}
-}
-
-func assertObjectIgnoringFieldsNoError[T any](t *testing.T, expected, actual T, keys []string) {
-	mockT := NewFakeT()
-	asserts.ObjectIgnoringFields(mockT, expected, actual, keys)
-
-	if mockT.ErrorMsg != "" {
-		t.Errorf("expected no error msg, got: %v", mockT.ErrorMsg)
-	}
+	assertNoError(t, mockT)
 }
 
 func assertObject[T any](t *testing.T, expected, actual T, errorMsgExpected string) {
 	mockT := NewFakeT()
 	asserts.Object(mockT, expected, actual)
-
-	if mockT.ErrorMsg != errorMsgExpected {
-		t.Errorf("expected msg: %v, received msg: %v", errorMsgExpected, mockT.ErrorMsg)
-	}
+	assertErrorMsg(t, mockT, errorMsgExpected)
 }
+
+func assertObjectIgnoringFieldsNoError[T any](t *testing.T, expected, actual T, keys []string) {
+	mockT := NewFakeT()
+	asserts.ObjectIgnoringFields(mockT, expected, actual, keys)
+	assertNoError(t, mockT)
+}
+
 func assertObjectIgnoringFields[T any](t *testing.T, expected, actual T, fieldsToIgnore []string, errorMsgExpected string) {
 	mockT := NewFakeT()
 	asserts.ObjectIgnoringFields(mockT, expected, actual, fieldsToIgnore)
-
-	if mockT.ErrorMsg != errorMsgExpected {
-		t.Errorf("expected msg: %v, received msg: %v", errorMsgExpected, mockT.ErrorMsg)
-	}
+	assertErrorMsg(t, mockT, errorMsgExpected)
 }
