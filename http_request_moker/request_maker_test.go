@@ -15,7 +15,7 @@ func TestRequestMocker(t *testing.T) {
 	headers := map[string]string{"Authorization": "Bearer 123"}
 	result := NewRequestMocker[*testDto](jsonutils.ToJsonBytes(payload), &testController{}).AddHeader(headers).RequestWithResponse()
 
-	asserts.DeepEqual(t, payload, result)
+	asserts.Object(t, payload, result)
 }
 
 type testDto struct {
