@@ -112,3 +112,35 @@ func TestSlices_WhenSliceHasMoreThaOneTimeSameElementOfStruct(t *testing.T) {
 
 	assertErrorMsg(t, mokingT, "expected element { A: 2 b: c c: { A: 3 b: 2 } } found 2 times, got 1 time")
 }
+
+func TestSlicesIgnoringFields(t *testing.T) {
+	mokingT := NewFakeT()
+	expected := []TestStruct{
+		{A: 1, b: "1"},
+		{A: 1, b: "1"},
+	}
+	result := []TestStruct{
+		{A: 1, b: "1"},
+		{A: 1, b: "2"},
+	}
+
+	asserts.SlicesIgnoringFields(mokingT, expected, result, []string{"b"})
+
+	assertNoError(t, mokingT)
+}
+
+func TestSlicesIgnoringFields2(t *testing.T) {
+	mokingT := NewFakeT()
+	expected := []TestStruct{
+		{A: 1, b: "1"},
+		{A: 1, b: "1"},
+	}
+	result := []TestStruct{
+		{A: 1, b: "1"},
+		{A: 2, b: "2"},
+	}
+
+	asserts.SlicesIgnoringFields(mokingT, expected, result, []string{"b"})
+
+	assertErrorMsg(t, mokingT, "expected element { A: 1 b: 1 } found 2 times, got 1 time")
+}

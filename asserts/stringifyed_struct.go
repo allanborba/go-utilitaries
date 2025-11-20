@@ -4,9 +4,15 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+
+	"github.com/allanborba/go-utilitaries/collections"
 )
 
 func StringifyedStruct[T any](expected T) string {
+	return StringifyedStructWithIgnoreFields(expected, []string{})
+}
+
+func StringifyedStructWithIgnoreFields[T any](expected T, fieldsToIgnore []string) string {
 	if !IsStruct(expected) {
 		return fmt.Sprintf("%v", expected)
 	}
@@ -18,12 +24,12 @@ func StringifyedStruct[T any](expected T) string {
 
 	for _, k := range keys {
 		v := mapped[k]
-		if v == nil || IsInterfaceNil(v) {
+		if v == nil || IsInterfaceNil(v) || collections.Contains(fieldsToIgnore, k) {
 			continue
 		}
 
 		if IsStruct(v) {
-			str += fmt.Sprintf("%v: %v ", k, StringifyedStruct(v))
+			str += fmt.Sprintf("%v: %v ", k, StringifyedStructWithIgnoreFields(v, fieldsToIgnore))
 		} else {
 			str += fmt.Sprintf("%v: %v ", k, v)
 		}
