@@ -1,6 +1,6 @@
 package asserts
 
-func Slices[T comparable](t Tester, expectedSlice []T, resultSlice []T) {
+func Slices[T any](t Tester, expectedSlice []T, resultSlice []T) {
 	if len(expectedSlice) != len(resultSlice) {
 		t.Errorf("expected %v elements, got %v elements", len(expectedSlice), len(resultSlice))
 		return
@@ -18,7 +18,7 @@ func Slices[T comparable](t Tester, expectedSlice []T, resultSlice []T) {
 	}
 }
 
-func getElementsCount[T comparable](expected T, expectElementsStringfyedSet, resultElementsStringfyedSet map[interface{}]int) (int, int) {
+func getElementsCount[T any](expected T, expectElementsStringfyedSet, resultElementsStringfyedSet map[interface{}]int) (int, int) {
 	var expectedCount int
 	var resultCount int
 

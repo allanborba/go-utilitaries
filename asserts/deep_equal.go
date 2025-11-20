@@ -2,9 +2,10 @@ package asserts
 
 import (
 	"fmt"
+	"reflect"
 )
 
-func DeepEqual[T comparable](t Tester, expected, result T) {
+func DeepEqual[T any](t Tester, expected, result T) {
 	if IsStruct(expected) {
 		assertStructs(expected, result, t)
 	} else {
@@ -13,7 +14,7 @@ func DeepEqual[T comparable](t Tester, expected, result T) {
 }
 
 func assertStructs[T any](expected T, result T, t Tester) {
-	expectedMsg, resultMsg := compareStructs(expected, result)
+	expectedMsg, resultMsg := compareStructs(expected, result, t)
 
 	if expectedMsg != "" {
 		expectedMsg = fmt.Sprint("expected ", expectedMsg)
@@ -23,7 +24,7 @@ func assertStructs[T any](expected T, result T, t Tester) {
 	}
 }
 
-func compareStructs[T any](expected T, result T) (string, string) {
+func compareStructs[T any](expected T, result T, t Tester) (string, string) {
 	fields := GetFieldNames(expected)
 	expectedMap := StructToMap(expected)
 	resultMap := StructToMap(result)
@@ -33,7 +34,7 @@ func compareStructs[T any](expected T, result T) (string, string) {
 
 	for _, field := range fields {
 		if IsStruct(expectedMap[field]) {
-			innerExpectedMsg, innerResultMsg := compareStructs(expectedMap[field], resultMap[field])
+			innerExpectedMsg, innerResultMsg := compareStructs(expectedMap[field], resultMap[field], t)
 
 			if innerExpectedMsg != "" {
 				expectedMsg += fmt.Sprintf("%v: %v ", field, innerExpectedMsg)
@@ -43,7 +44,7 @@ func compareStructs[T any](expected T, result T) (string, string) {
 			continue
 		}
 
-		if expectedMap[field] != resultMap[field] {
+		if !reflect.DeepEqual(expectedMap[field], resultMap[field]) {
 			expectedMsg += fmt.Sprintf("%v: %v ", field, expectedMap[field])
 			resultMsg += fmt.Sprintf("%v: %v ", field, resultMap[field])
 		}

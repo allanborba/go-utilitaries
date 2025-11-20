@@ -90,3 +90,27 @@ func TestDeepEqual_WhenStructFieldIsEqualAndOtherFieldIsDiff_ThenShowOnlyDiffAtt
 
 	assertErrorMsg(t, mokingT, "expected { b: 1 }, got { b: 2 }")
 }
+
+func TestDeepEqual_WhenStructFieldIsAnEqualSlice_ThenShowNoError(t *testing.T) {
+	mokingT := NewFakeT()
+	s1 := TestStruct{A: 2, b: "1"}
+	s2 := TestStruct{A: 2, b: "1"}
+	struct1 := TestStructSlice{d: []TestStruct{s1}}
+	struct2 := TestStructSlice{d: []TestStruct{s2}}
+
+	asserts.DeepEqual(mokingT, struct1, struct2)
+
+	assertNoError(t, mokingT)
+}
+
+func TestDeepEqual_WhenStructFieldIsADiffSlice_ThenShowOnlyTheDiffOnFieldWithSlice(t *testing.T) {
+	mokingT := NewFakeT()
+	s1 := TestStruct{A: 2, b: "1"}
+	s2 := TestStruct{A: 2, b: "2"}
+	struct1 := TestStructSlice{d: []TestStruct{s1}}
+	struct2 := TestStructSlice{d: []TestStruct{s2}}
+
+	asserts.DeepEqual(mokingT, struct1, struct2)
+
+	assertErrorMsg(t, mokingT, "expected { d: [{2 1 <nil>}] }, got { d: [{2 2 <nil>}] }")
+}

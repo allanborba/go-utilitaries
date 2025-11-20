@@ -1,9 +1,11 @@
 package asserts
 
+import "reflect"
+
 const ERROR_MSG = "expected %v, got %v"
 
-func Equal[T comparable](t Tester, expected T, result T) {
-	if result != expected {
+func Equal[T any](t Tester, expected T, result T) {
+	if !reflect.DeepEqual(expected, result) {
 		t.Errorf(ERROR_MSG, expected, result)
 	}
 }

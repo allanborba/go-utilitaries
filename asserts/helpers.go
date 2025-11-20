@@ -17,3 +17,7 @@ func IsStruct[T any](expected T) bool {
 func IsInterfaceNil(value interface{}) bool {
 	return value == nil || unsafe.Pointer((*[2]uintptr)(unsafe.Pointer(&value))[1]) == nil
 }
+
+func IsSlice[T any](value T) bool {
+	return reflect.TypeOf(value).Kind() == reflect.Slice
+}

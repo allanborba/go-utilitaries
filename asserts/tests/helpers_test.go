@@ -23,6 +23,11 @@ type TestStruct struct {
 	c *TestStruct
 }
 
+type TestStructSlice struct {
+	TestStruct
+	d []TestStruct
+}
+
 func assertNoError(t *testing.T, mokingT *FakeT) {
 	if mokingT.ErrorMsg != "" {
 		t.Errorf("expected no error msg, got: %v", mokingT.ErrorMsg)

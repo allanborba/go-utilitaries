@@ -2,10 +2,11 @@ package asserts
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
 )
 
-func SliceStrict[T comparable](t Tester, expected, result []T) {
+func SliceStrict[T any](t Tester, expected, result []T) {
 	slices := printableSlices(expected, result)
 
 	if len(expected) != len(result) {
@@ -19,11 +20,11 @@ func SliceStrict[T comparable](t Tester, expected, result []T) {
 	}
 }
 
-func getWrongElements[T comparable](expected []T, actual []T) string {
+func getWrongElements[T any](expected []T, actual []T) string {
 	wrongElementsIndex := []string{}
 
 	for i := range expected {
-		if expected[i] != actual[i] {
+		if !reflect.DeepEqual(expected[i], actual[i]) {
 			stringifyedIndex := StringifyedStruct(i)
 			wrongElementsIndex = append(wrongElementsIndex, stringifyedIndex)
 		}
@@ -32,7 +33,7 @@ func getWrongElements[T comparable](expected []T, actual []T) string {
 	return strings.Join(wrongElementsIndex, ", ")
 }
 
-func printableSlices[T comparable](expected []T, result []T) string {
+func printableSlices[T any](expected []T, result []T) string {
 	expectedString := StringifySliceOfStructs(expected)
 	actualString := StringifySliceOfStructs(result)
 
