@@ -32,6 +32,11 @@ func TestObject_StructValues(t *testing.T) {
 	assertObject(t, testStruct{d: []int{1, 2}}, testStruct{d: []int{1, 3}}, "expected {d: [1 2]}, got {d: [1 3]}")
 }
 
+func TestObject_PrimitiveFieldWithErrorAndStructNot(t *testing.T) {
+	struct1 := testStruct{A: "10", b: 10}
+	assertObject(t, testStruct{A: "1", b: 1, c: &struct1}, testStruct{A: "2", b: 1, c: &struct1}, "expected {A: 1}, got {A: 2}")
+}
+
 func TestObjectIgnoringKeys(t *testing.T) {
 	assertObjectIgnoringFieldsNoError(t, testStruct{A: "1"}, testStruct{A: "2"}, []string{"A"})
 	assertObjectIgnoringFields(t, testStruct{A: "1", b: 1}, testStruct{A: "2", b: 2}, []string{"A"}, "expected {b: 1}, got {b: 2}")

@@ -41,7 +41,11 @@ func compareStruct[T any](expected T, result T, fieldsToIgnore []string) (bool, 
 		}
 
 		if IsStruct(mapExpected[field]) {
-			hasError, expectedMsg, resultMsg = compareStruct(mapExpected[field], mapResult[field], fieldsToIgnore)
+			hasErr, expectedMsg, resultMsg := compareStruct(mapExpected[field], mapResult[field], fieldsToIgnore)
+			if !hasErr {
+				continue
+			}
+			hasError = true
 			expectedMsg = fmt.Sprintf("%s: %s", field, expectedMsg)
 			resultMsg = fmt.Sprintf("%s: %s", field, resultMsg)
 			wrongValuesExpected = append(wrongValuesExpected, expectedMsg)
