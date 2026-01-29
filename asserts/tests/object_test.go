@@ -30,6 +30,19 @@ func TestObject_StructValues(t *testing.T) {
 	assertObject(t, testStruct{A: "1", b: 1, c: &struct4}, testStruct{A: "1", b: 1, c: &struct5}, "expected {c: {b: 10, c: {b: 10}}}, got {c: {b: 20, c: {b: 20}}}")
 
 	assertObject(t, testStruct{d: []int{1, 2}}, testStruct{d: []int{1, 3}}, "expected {d: [1 2]}, got {d: [1 3]}")
+
+	assertObjectNoError(t, testStruct{c: nil}, testStruct{c: nil})
+	assertObjectNoError(t, testStruct{c: &testStruct{e: nil}}, testStruct{c: &testStruct{e: nil}})
+}
+
+func TestStructToMap_TypedNilPointerPanicsToday(t *testing.T) {
+	type Parts struct {
+		A string
+	}
+
+	var p *Parts = nil
+
+	_ = asserts.StructToMap(p)
 }
 
 func TestObject_PrimitiveFieldWithErrorAndStructNot(t *testing.T) {
@@ -47,6 +60,7 @@ type testStruct struct {
 	b int
 	c *testStruct
 	d []int
+	e []*testStruct
 }
 
 func assertObjectNoError[T any](t *testing.T, expected, actual T) {

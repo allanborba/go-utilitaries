@@ -22,6 +22,10 @@ func StructToMap(in interface{}) map[string]interface{} {
 	structMapped := make(map[string]interface{})
 	value := reflectValue(in)
 
+	if !value.IsValid() || value.Kind() != reflect.Struct {
+		return structMapped
+	}
+
 	copy := reflect.New(value.Type()).Elem()
 	copy.Set(value)
 	elType := copy.Type()
