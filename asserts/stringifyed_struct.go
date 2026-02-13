@@ -2,6 +2,7 @@ package asserts
 
 import (
 	"fmt"
+	"reflect"
 	"slices"
 	"strings"
 
@@ -30,12 +31,30 @@ func StringifyedStructWithIgnoreFields[T any](expected T, fieldsToIgnore []strin
 
 		if IsStruct(v) {
 			str += fmt.Sprintf("%v: %v ", k, StringifyedStructWithIgnoreFields(v, fieldsToIgnore))
+		} else if isSliceValue(v) {
+			str += fmt.Sprintf("%v: %v ", k, stringifySliceValue(v, fieldsToIgnore))
 		} else {
 			str += fmt.Sprintf("%v: %v ", k, v)
 		}
 	}
 
 	return fmt.Sprint("{ ", str, "}")
+}
+
+func stringifySliceValue(v interface{}, fieldsToIgnore []string) string {
+	rv := reflect.ValueOf(v)
+	strs := make([]string, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		elem := rv.Index(i).Interface()
+		if IsStruct(elem) {
+			strs[i] = StringifyedStructWithIgnoreFields(elem, fieldsToIgnore)
+		} else if isSliceValue(elem) {
+			strs[i] = stringifySliceValue(elem, fieldsToIgnore)
+		} else {
+			strs[i] = fmt.Sprintf("%v", elem)
+		}
+	}
+	return fmt.Sprintf("[%s]", strings.Join(strs, ", "))
 }
 
 func StringifySliceOfStructs[T any](slice []T) string {

@@ -19,20 +19,20 @@ func TestSlicesNew_WhenSlicesOfStringsAreEqual_ThenNoError(t *testing.T) {
 }
 
 func TestSlicesNew_WhenMissingElement_ThenShowMissingError(t *testing.T) {
-	assertSlicesNew(t, []int{1, 2, 3}, []int{1, 2}, "missing elements: [3]")
+	assertSlicesNew(t, []int{1, 2, 3}, []int{1, 2}, "\nmissing elements:\n  - 3")
 }
 
 func TestSlicesNew_WhenExtraElement_ThenShowExtraError(t *testing.T) {
-	assertSlicesNew(t, []int{1, 2}, []int{1, 2, 4}, "extra elements: [4]")
+	assertSlicesNew(t, []int{1, 2}, []int{1, 2, 4}, "\nextra elements:\n  - 4")
 }
 
 func TestSlicesNew_WhenMissingAndExtraElements_ThenShowBothErrors(t *testing.T) {
-	assertSlicesNew(t, []int{1, 2, 3}, []int{1, 2, 4}, "missing elements: [3]; extra elements: [4]")
+	assertSlicesNew(t, []int{1, 2, 3}, []int{1, 2, 4}, "\nmissing elements:\n  - 3\n\nextra elements:\n  - 4")
 }
 
 func TestSlicesNew_WhenDuplicateElements_ThenHandleCorrectly(t *testing.T) {
 	assertSlicesNewNoError(t, []int{1, 1, 2}, []int{2, 1, 1})
-	assertSlicesNew(t, []int{1, 1, 2}, []int{1, 2, 2}, "missing elements: [1]; extra elements: [2]")
+	assertSlicesNew(t, []int{1, 1, 2}, []int{1, 2, 2}, "\nmissing elements:\n  - 1\n\nextra elements:\n  - 2")
 }
 
 func TestSlicesNew_WhenBothEmpty_ThenNoError(t *testing.T) {
@@ -59,7 +59,7 @@ func TestSlicesNew_WhenStructMissing_ThenShowMissingError(t *testing.T) {
 	result := []TestStruct{
 		{A: 1, b: "a"},
 	}
-	assertSlicesNew(t, expected, result, "missing elements: [{ A: 2 b: b }]")
+	assertSlicesNew(t, expected, result, "\nmissing elements:\n  - { A: 2 b: b }")
 }
 
 func TestSlicesNew_WhenStructExtra_ThenShowExtraError(t *testing.T) {
@@ -70,7 +70,7 @@ func TestSlicesNew_WhenStructExtra_ThenShowExtraError(t *testing.T) {
 		{A: 1, b: "a"},
 		{A: 3, b: "c"},
 	}
-	assertSlicesNew(t, expected, result, "extra elements: [{ A: 3 b: c }]")
+	assertSlicesNew(t, expected, result, "\nextra elements:\n  - { A: 3 b: c }")
 }
 
 func TestSlicesNew_WhenSliceOfStructsHasDiffElement_ThenShowError(t *testing.T) {
@@ -90,7 +90,7 @@ func TestSlicesNew_WhenSliceOfStructsHasDiffElement_ThenShowError(t *testing.T) 
 		{A: 6, b: "b"},
 		{A: 5, b: "b"},
 	}
-	assertSlicesNew(t, expected, result, "missing elements: [{ A: 4 b: b }]; extra elements: [{ A: 4 b: Z }]")
+	assertSlicesNew(t, expected, result, "\nmissing elements:\n  - { A: 4 b: b }\n\nextra elements:\n  - { A: 4 b: Z }")
 }
 
 func TestSlicesNew_WhenDuplicateStructs_ThenHandleCorrectly(t *testing.T) {
@@ -108,7 +108,7 @@ func TestSlicesNew_WhenDuplicateStructs_ThenHandleCorrectly(t *testing.T) {
 		{A: 4, b: "a"},
 		{A: 4, b: "a"},
 	}
-	assertSlicesNew(t, expected, result, "missing elements: [{ A: 2 b: c c: { A: 3 b: 2 } }]; extra elements: [{ A: 4 b: a }]")
+	assertSlicesNew(t, expected, result, "\nmissing elements:\n  - { A: 2 b: c c: { A: 3 b: 2 } }\n\nextra elements:\n  - { A: 4 b: a }")
 }
 
 func TestSlicesNew_WhenStructWithNestedStruct_ThenCompareRecursively(t *testing.T) {
@@ -132,7 +132,7 @@ func TestSlicesNew_WhenStructWithDiffNestedStruct_ThenShowError(t *testing.T) {
 	result := []TestStruct{
 		{A: 1, b: "a", c: &nested2},
 	}
-	assertSlicesNew(t, expected, result, "missing elements: [{ A: 1 b: a c: { A: 10 b: x } }]; extra elements: [{ A: 1 b: a c: { A: 10 b: y } }]")
+	assertSlicesNew(t, expected, result, "\nmissing elements:\n  - { A: 1 b: a c: { A: 10 b: x } }\n\nextra elements:\n  - { A: 1 b: a c: { A: 10 b: y } }")
 }
 
 func TestSlicesNew_WhenStructWithSliceField_ThenCompareRecursively(t *testing.T) {

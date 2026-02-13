@@ -12,15 +12,15 @@ func SlicesNew[T any](t Tester, expected, result []T) {
 	msgs := []string{}
 
 	if len(missing) > 0 {
-		msgs = append(msgs, fmt.Sprintf("missing elements: %s", formatElements(missing)))
+		msgs = append(msgs, fmt.Sprintf("\nmissing elements:\n%s", formatElements(missing)))
 	}
 
 	if len(extra) > 0 {
-		msgs = append(msgs, fmt.Sprintf("extra elements: %s", formatElements(extra)))
+		msgs = append(msgs, fmt.Sprintf("\nextra elements:\n%s", formatElements(extra)))
 	}
 
 	if len(msgs) > 0 {
-		t.Errorf(strings.Join(msgs, "; "))
+		t.Errorf(strings.Join(msgs, "\n"))
 	}
 }
 
@@ -140,10 +140,10 @@ func formatElements[T any](elements []T) string {
 	strs := make([]string, len(elements))
 	for i, e := range elements {
 		if IsStruct(e) {
-			strs[i] = StringifyedStruct(e)
+			strs[i] = fmt.Sprintf("  - %s", StringifyedStruct(e))
 		} else {
-			strs[i] = fmt.Sprintf("%v", e)
+			strs[i] = fmt.Sprintf("  - %v", e)
 		}
 	}
-	return fmt.Sprintf("[%s]", strings.Join(strs, ", "))
+	return strings.Join(strs, "\n")
 }
