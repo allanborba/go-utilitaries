@@ -73,6 +73,44 @@ func TestSlicesNew_WhenStructExtra_ThenShowExtraError(t *testing.T) {
 	assertSlicesNew(t, expected, result, "extra elements: [{ A: 3 b: c }]")
 }
 
+func TestSlicesNew_WhenSliceOfStructsHasDiffElement_ThenShowError(t *testing.T) {
+	expected := []TestStruct{
+		{A: 1, b: "a"},
+		{A: 2, b: "b"},
+		{A: 3, b: "b"},
+		{A: 4, b: "b"},
+		{A: 5, b: "b"},
+		{A: 6, b: "b"},
+	}
+	result := []TestStruct{
+		{A: 2, b: "b"},
+		{A: 4, b: "Z"},
+		{A: 1, b: "a"},
+		{A: 3, b: "b"},
+		{A: 6, b: "b"},
+		{A: 5, b: "b"},
+	}
+	assertSlicesNew(t, expected, result, "missing elements: [{ A: 4 b: b }]; extra elements: [{ A: 4 b: Z }]")
+}
+
+func TestSlicesNew_WhenDuplicateStructs_ThenHandleCorrectly(t *testing.T) {
+	expected := []TestStruct{
+		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 3, b: "a"},
+		{A: 4, b: "a"},
+		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 1, b: "a"},
+	}
+	result := []TestStruct{
+		{A: 1, b: "a"},
+		{A: 2, b: "c", c: &TestStruct{A: 3, b: "2"}},
+		{A: 3, b: "a"},
+		{A: 4, b: "a"},
+		{A: 4, b: "a"},
+	}
+	assertSlicesNew(t, expected, result, "missing elements: [{ A: 2 b: c c: { A: 3 b: 2 } }]; extra elements: [{ A: 4 b: a }]")
+}
+
 func TestSlicesNew_WhenStructWithNestedStruct_ThenCompareRecursively(t *testing.T) {
 	nested1 := TestStruct{A: 10, b: "x"}
 	nested2 := TestStruct{A: 10, b: "x"}
