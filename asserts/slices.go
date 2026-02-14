@@ -1,52 +1,149 @@
 package asserts
 
-func Slices[T any](t Tester, expectedSlice []T, resultSlice []T) {
-	SlicesIgnoringFields(t, expectedSlice, resultSlice, []string{})
-}
+import (
+	"fmt"
+	"reflect"
+	"strings"
+)
 
-func SlicesIgnoringFields[T any](t Tester, expectedSlice []T, resultSlice []T, ignoreFields []string) {
-	if len(expectedSlice) != len(resultSlice) {
-		t.Errorf("expected %v elements, got %v elements", len(expectedSlice), len(resultSlice))
-		return
+func Slices[T any](t Tester, expected, result []T) {
+	missing, extra := diffSlices(expected, result)
+
+	msgs := []string{}
+
+	if len(missing) > 0 {
+		msgs = append(msgs, fmt.Sprintf("\nmissing elements:\n%s", formatElements(missing)))
 	}
 
-	resultElementsStringfyedSet := buildStringfyedSet(resultSlice, ignoreFields)
-	expectElementsStringfyedSet := buildStringfyedSet(expectedSlice, ignoreFields)
+	if len(extra) > 0 {
+		msgs = append(msgs, fmt.Sprintf("\nextra elements:\n%s", formatElements(extra)))
+	}
 
-	for _, expected := range expectedSlice {
-		expectedCount, resultCount := getElementsCount(expected, expectElementsStringfyedSet, resultElementsStringfyedSet, ignoreFields)
+	if len(msgs) > 0 {
+		t.Errorf(strings.Join(msgs, "\n"))
+	}
+}
 
-		if resultCount != expectedCount {
-			t.Errorf("expected element %v found %d times, got %d time", StringifyedStruct(expected), expectedCount, resultCount)
+func diffSlices[T any](expected, result []T) (missing []T, extra []T) {
+	resultUsed := make([]bool, len(result))
+
+	for _, exp := range expected {
+		found := false
+		for j, res := range result {
+			if resultUsed[j] {
+				continue
+			}
+			if objectsEqual(exp, res) {
+				resultUsed[j] = true
+				found = true
+				break
+			}
+		}
+		if !found {
+			missing = append(missing, exp)
 		}
 	}
-}
 
-func getElementsCount[T any](expected T, expectElementsStringfyedSet, resultElementsStringfyedSet map[interface{}]int, fieldsToIgnore []string) (int, int) {
-	var expectedCount int
-	var resultCount int
-
-	if IsStruct(expected) {
-		expectedCount = expectElementsStringfyedSet[StringifyedStructWithIgnoreFields(expected, fieldsToIgnore)]
-		resultCount = resultElementsStringfyedSet[StringifyedStructWithIgnoreFields(expected, fieldsToIgnore)]
-	} else {
-		expectedCount = expectElementsStringfyedSet[expected]
-		resultCount = resultElementsStringfyedSet[expected]
+	for j, res := range result {
+		if !resultUsed[j] {
+			extra = append(extra, res)
+		}
 	}
 
-	return expectedCount, resultCount
+	return missing, extra
 }
 
-func buildStringfyedSet[T any](resultSlice []T, ignoreFields []string) map[interface{}]int {
-	resultElementsStringfyedSet := make(map[interface{}]int)
+func objectsEqual[T any](a, b T) bool {
+	if IsStruct(a) {
+		return structsEqual(a, b)
+	}
+	return reflect.DeepEqual(a, b)
+}
 
-	for _, result := range resultSlice {
-		if IsStruct(result) {
-			resultElementsStringfyedSet[StringifyedStructWithIgnoreFields(result, ignoreFields)]++
+func structsEqual[T any](a, b T) bool {
+	mapA := StructToMap(a)
+	mapB := StructToMap(b)
+	fieldsA := GetFieldNames(a)
+
+	for _, field := range fieldsA {
+		valA := mapA[field]
+		valB := mapB[field]
+
+		if valA == nil && valB == nil {
+			continue
+		}
+		if IsInterfaceNil(valA) && IsInterfaceNil(valB) {
+			continue
+		}
+		if IsInterfaceNil(valA) != IsInterfaceNil(valB) {
+			return false
+		}
+
+		if isSliceValue(valA) {
+			if !sliceFieldsEqual(valA, valB) {
+				return false
+			}
+		} else if IsStruct(valA) {
+			if !structsEqual(valA, valB) {
+				return false
+			}
 		} else {
-			resultElementsStringfyedSet[result]++
+			if !reflect.DeepEqual(valA, valB) {
+				return false
+			}
 		}
 	}
 
-	return resultElementsStringfyedSet
+	return true
+}
+
+func isSliceValue(v interface{}) bool {
+	if v == nil {
+		return false
+	}
+	return reflect.TypeOf(v).Kind() == reflect.Slice
+}
+
+func sliceFieldsEqual(a, b interface{}) bool {
+	va := reflect.ValueOf(a)
+	vb := reflect.ValueOf(b)
+
+	if va.Len() != vb.Len() {
+		return false
+	}
+
+	used := make([]bool, vb.Len())
+
+	for i := 0; i < va.Len(); i++ {
+		elemA := va.Index(i).Interface()
+		found := false
+		for j := 0; j < vb.Len(); j++ {
+			if used[j] {
+				continue
+			}
+			elemB := vb.Index(j).Interface()
+			if objectsEqual(elemA, elemB) {
+				used[j] = true
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+
+	return true
+}
+
+func formatElements[T any](elements []T) string {
+	strs := make([]string, len(elements))
+	for i, e := range elements {
+		if IsStruct(e) {
+			strs[i] = fmt.Sprintf("  - %s", StringifyedStruct(e))
+		} else {
+			strs[i] = fmt.Sprintf("  - %v", e)
+		}
+	}
+	return strings.Join(strs, "\n")
 }
